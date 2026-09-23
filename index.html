@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lvl Up — Money skills that level up</title>
+<meta name="description" content="Lvl Up is the money-skills app for Indian families. Kids, teens and college students each get a track built for their stage — parents get peace of mind, not another app to manage.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff;
+    --bg-alt:#f4f5f7;
+    --text:#0a0a0c;
+    --text-secondary:#5b5d63;
+    --text-tertiary:#8a8c91;
+    --accent:#1447e6;
+    --accent-dark:#0d2fa0;
+    --accent-soft:rgba(20,71,230,0.08);
+    --accent-soft-strong:rgba(20,71,230,0.14);
+    --border:rgba(10,10,12,0.09);
+    --card-bg:#ffffff;
+    --nav-bg-solid:rgba(255,255,255,0.82);
+    --shadow-lg:0 30px 70px rgba(10,10,20,0.10);
+    --shadow-sm:0 10px 30px rgba(10,10,20,0.06);
+    --on-accent:#ffffff;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#08090b;
+      --bg-alt:#111216;
+      --text:#f4f5f7;
+      --text-secondary:#a7a9b0;
+      --text-tertiary:#7d7f86;
+      --accent:#6d8cff;
+      --accent-dark:#4a68e0;
+      --accent-soft:rgba(109,140,255,0.14);
+      --accent-soft-strong:rgba(109,140,255,0.22);
+      --border:rgba(255,255,255,0.10);
+      --card-bg:#141519;
+      --nav-bg-solid:rgba(8,9,11,0.78);
+      --shadow-lg:0 30px 70px rgba(0,0,0,0.55);
+      --shadow-sm:0 10px 30px rgba(0,0,0,0.4);
+      --on-accent:#ffffff;
+      color-scheme: dark;
+    }
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  input{font-family:inherit;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  section{position:relative;}
+
+  /* ---------- reveal-on-scroll ---------- */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in-view{opacity:1;transform:translateY(0);}
+  .reveal.d1{transition-delay:.08s;}
+  .reveal.d2{transition-delay:.16s;}
+  .reveal.d3{transition-delay:.24s;}
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 24px;
+    background:transparent;
+    border-bottom:1px solid transparent;
+    transition:background .35s ease, border-color .35s ease, padding .35s ease, backdrop-filter .35s ease;
+  }
+  .nav.solid{
+    background:var(--nav-bg-solid);
+    backdrop-filter:blur(20px) saturate(1.6);
+    -webkit-backdrop-filter:blur(20px) saturate(1.6);
+    border-bottom:1px solid var(--border);
+    padding:14px 24px;
+  }
+  .nav-inner{max-width:1180px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;letter-spacing:-0.01em;}
+  .logo-dot{width:9px;height:9px;border-radius:3px;background:var(--accent);display:inline-block;}
+  .nav-links{display:flex;align-items:center;gap:30px;}
+  .nav-links a{font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .2s;}
+  .nav-links a:hover{color:var(--text);}
+  .nav-cta{
+    font-size:14px;font-weight:600;padding:9px 18px;border-radius:100px;
+    background:var(--accent);color:var(--on-accent);
+    transition:transform .15s ease, opacity .15s ease;
+    white-space:nowrap;
+  }
+  .nav-cta:hover{opacity:.88;}
+  .nav-cta:active{transform:scale(.96);}
+  @media (max-width:760px){
+    .nav-links{display:none;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:150px 0 80px;
+    min-height:94vh;
+    display:flex;
+    align-items:center;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:56px;
+    align-items:center;
+    width:100%;
+  }
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:64px;}
+    .hero{padding:120px 0 60px;min-height:unset;}
+  }
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--accent);
+    background:var(--accent-soft);
+    padding:7px 14px;border-radius:100px;
+    margin-bottom:22px;
+  }
+
+  .hero h1{
+    font-size:clamp(2.6rem, 5.6vw, 4.6rem);
+    line-height:1.03;
+    font-weight:800;
+    letter-spacing:-0.035em;
+    margin-bottom:20px;
+    transition:opacity .25s ease;
+    min-height:1.1em;
+  }
+  .hero h1 .accent-word{color:var(--accent);}
+
+  .hero p.sub{
+    font-size:clamp(1.05rem, 1.6vw, 1.3rem);
+    color:var(--text-secondary);
+    line-height:1.5;
+    max-width:520px;
+    margin-bottom:34px;
+    font-weight:400;
+    transition:opacity .25s ease;
+  }
+
+  .pill-select{
+    display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px;
+  }
+  .pill-btn{
+    font-size:13.5px;font-weight:600;
+    padding:9px 16px;border-radius:100px;
+    border:1px solid var(--border);
+    background:var(--card-bg);
+    color:var(--text-secondary);
+    transition:all .18s ease;
+  }
+  .pill-btn:hover{border-color:var(--accent);color:var(--text);}
+  .pill-btn[aria-pressed="true"]{
+    background:var(--text);
+    color:var(--bg);
+    border-color:var(--text);
+  }
+
+  .email-form{
+    display:flex;gap:10px;max-width:440px;flex-wrap:wrap;
+  }
+  .email-form input[type="email"]{
+    flex:1 1 220px;
+    min-width:0;
+    padding:14px 18px;
+    border-radius:100px;
+    border:1px solid var(--border);
+    background:var(--card-bg);
+    color:var(--text);
+    font-size:15px;
+    outline:none;
+    transition:border-color .18s ease, box-shadow .18s ease;
+  }
+  .email-form input[type="email"]:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 4px var(--accent-soft);
+  }
+  .email-form input[type="email"]::placeholder{color:var(--text-tertiary);}
+  .submit-btn{
+    padding:14px 24px;
+    border-radius:100px;
+    background:var(--accent);
+    color:var(--on-accent);
+    font-size:15px;font-weight:700;
+    white-space:nowrap;
+    transition:transform .15s ease, opacity .15s ease;
+    flex:0 0 auto;
+  }
+  .submit-btn:hover{opacity:.9;}
+  .submit-btn:active{transform:scale(.97);}
+  .submit-btn:disabled{opacity:.6;cursor:default;}
+
+  .form-note{font-size:12.5px;color:var(--text-tertiary);margin-top:12px;}
+
+  .success-msg{
+    display:none;
+    align-items:center;gap:10px;
+    font-size:15px;font-weight:600;
+    color:var(--accent);
+    padding:14px 20px;
+    border:1px solid var(--accent-soft-strong);
+    background:var(--accent-soft);
+    border-radius:100px;
+    max-width:440px;
+  }
+  .success-msg.show{display:inline-flex;}
+  .success-msg svg{flex:0 0 auto;}
+
+  /* ---------- hero visual: apple-pay style card stack ---------- */
+  .card-stack{
+    position:relative;
+    height:420px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .lvl-card{
+    position:absolute;
+    width:290px;height:180px;
+    border-radius:24px;
+    padding:22px;
+    display:flex;flex-direction:column;justify-content:space-between;
+    box-shadow:var(--shadow-lg);
+    color:#fff;
+    transition:transform .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .lvl-card .tag{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.85;}
+  .lvl-card .brand{font-size:15px;font-weight:800;letter-spacing:-0.01em;}
+  .lvl-card .figure{font-size:22px;font-weight:800;letter-spacing:-0.01em;}
+  .card-1{
+    background:linear-gradient(135deg,#1447e6,#0d2fa0);
+    transform:translate(-64px,-64px) rotate(-9deg);
+    z-index:1;
+  }
+  .card-2{
+    background:linear-gradient(135deg,#2f5bff,#123bc7);
+    transform:translate(18px,-6px) rotate(-1deg);
+    z-index:2;
+  }
+  .card-3{
+    background:linear-gradient(135deg,#537bff,#1e46d6);
+    transform:translate(66px,60px) rotate(7deg);
+    z-index:3;
+  }
+  .card-stack:hover .card-1{transform:translate(-76px,-72px) rotate(-11deg);}
+  .card-stack:hover .card-2{transform:translate(20px,-10px) rotate(-1deg);}
+  .card-stack:hover .card-3{transform:translate(78px,68px) rotate(9deg);}
+  @media (max-width:900px){
+    .card-stack{height:300px;transform:scale(.86);}
+  }
+  @media (max-width:420px){
+    .card-stack{transform:scale(.72);}
+  }
+
+  /* ---------- section headings ---------- */
+  .section-head{
+    max-width:640px;
+    margin:0 0 52px;
+  }
+  .section-head .kicker{
+    font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:14px;display:block;
+  }
+  .section-head h2{
+    font-size:clamp(2rem, 3.6vw, 2.9rem);
+    font-weight:800;letter-spacing:-0.03em;line-height:1.08;margin-bottom:14px;
+  }
+  .section-head p{
+    font-size:17px;color:var(--text-secondary);line-height:1.55;
+  }
+  .section-pad{padding:120px 0;}
+  @media (max-width:760px){
+    .section-pad{padding:80px 0;}
+  }
+
+  /* ---------- TRACK PICKER ---------- */
+  .tracks-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  }
+  @media (max-width:900px){
+    .tracks-grid{grid-template-columns:1fr;}
+  }
+  .track-card{
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg,28px);
+    background:var(--card-bg);
+    overflow:hidden;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .track-card[open]{border-color:var(--accent);box-shadow:var(--shadow-sm);}
+  .track-card summary{
+    list-style:none;
+    padding:30px;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    position:relative;
+  }
+  .track-card summary::-webkit-details-marker{display:none;}
+  .track-tag{
+    font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--accent);
+  }
+  .track-title{font-size:22px;font-weight:800;letter-spacing:-0.02em;}
+  .track-job{font-size:15px;color:var(--text-secondary);line-height:1.5;}
+  .track-toggle{
+    position:absolute;top:28px;right:28px;
+    width:30px;height:30px;border-radius:50%;
+    border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .3s ease, background .2s ease;
+    flex:0 0 auto;
+  }
+  .track-card[open] .track-toggle{transform:rotate(45deg);background:var(--accent);border-color:var(--accent);}
+  .track-card[open] .track-toggle svg{stroke:#fff;}
+  .track-toggle svg{stroke:var(--text);}
+  .track-body{
+    padding:0 30px 30px;
+  }
+  .track-body ul{display:flex;flex-direction:column;gap:12px;margin-top:4px;}
+  .track-body li{
+    font-size:14.5px;color:var(--text-secondary);line-height:1.5;
+    display:flex;gap:10px;align-items:flex-start;
+  }
+  .track-body li::before{
+    content:"";
+    flex:0 0 auto;
+    width:6px;height:6px;border-radius:50%;
+    background:var(--accent);
+    margin-top:7px;
+  }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  }
+  @media (max-width:900px){
+    .how-grid{grid-template-columns:1fr;}
+  }
+  .how-card{
+    border-radius:var(--radius-lg,28px);
+    background:var(--bg-alt);
+    padding:36px 30px;
+    display:flex;flex-direction:column;gap:16px;
+    min-height:220px;
+  }
+  .how-num{
+    width:40px;height:40px;border-radius:50%;
+    background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;font-weight:800;
+  }
+  .how-card h3{font-size:20px;font-weight:800;letter-spacing:-0.01em;}
+  .how-card p{font-size:14.5px;color:var(--text-secondary);line-height:1.55;}
+
+  /* ---------- TRUST STRIP ---------- */
+  .trust{background:var(--bg-alt);}
+  .trust-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+  }
+  @media (max-width:900px){
+    .trust-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:560px){
+    .trust-grid{grid-template-columns:1fr;}
+  }
+  .trust-item{
+    padding:8px 0 8px;
+  }
+  .trust-icon{
+    width:38px;height:38px;border-radius:11px;
+    background:var(--accent-soft);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:16px;
+  }
+  .trust-item h4{font-size:15.5px;font-weight:700;margin-bottom:8px;letter-spacing:-0.01em;}
+  .trust-item p{font-size:13.5px;color:var(--text-secondary);line-height:1.5;}
+
+  /* ---------- FINAL CTA ---------- */
+  .cta-final{
+    text-align:center;
+    padding:130px 0 120px;
+  }
+  .cta-final h2{
+    font-size:clamp(2.2rem,5vw,3.6rem);
+    font-weight:800;letter-spacing:-0.035em;line-height:1.05;
+    margin-bottom:18px;
+  }
+  .cta-final p{
+    font-size:17px;color:var(--text-secondary);
+    max-width:460px;margin:0 auto 38px;
+    line-height:1.55;
+  }
+  .cta-final .email-form{margin:0 auto;}
+  .cta-final .email-form input[type="email"]{padding:16px 20px;font-size:16px;}
+  .cta-final .submit-btn{padding:16px 28px;font-size:16px;}
+  .cta-final .success-msg{margin:0 auto;}
+  .cta-final .form-note{margin-top:16px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--border);
+    padding:44px 0;
+  }
+  .footer-inner{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
+  }
+  .footer-left{display:flex;flex-direction:column;gap:6px;}
+  .footer-left .logo{font-size:16px;}
+  .footer-left p{font-size:13px;color:var(--text-tertiary);}
+  .footer-social{display:flex;gap:18px;}
+  .footer-social a{font-size:13px;color:var(--text-secondary);font-weight:500;}
+  .footer-social a:hover{color:var(--accent);}
+  .footer-bottom{
+    margin-top:28px;padding-top:24px;border-top:1px solid var(--border);
+    font-size:12.5px;color:var(--text-tertiary);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="logo"><span class="logo-dot"></span>Lvl Up</a>
+    <div class="nav-links">
+      <a href="#kids-card" data-track-link="kids">Kids</a>
+      <a href="#teens-card" data-track-link="teens">Teens</a>
+      <a href="#college-card" data-track-link="college">College</a>
+      <a href="#how">How it works</a>
+    </div>
+    <a href="#join" class="nav-cta">Join waitlist</a>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Now building for India</span>
+        <h1 id="hero-headline">Money skills for every stage of growing up.</h1>
+        <p class="sub" id="hero-sub">Kids. Teens. College. One app that meets you where you are — and a parent report that takes 30 seconds, not another dashboard to babysit.</p>
+
+        <div class="pill-select" role="group" aria-label="Choose your track">
+          <button class="pill-btn" data-select="kids" aria-pressed="false">I'm a parent</button>
+          <button class="pill-btn" data-select="teens" aria-pressed="false">I'm a teen</button>
+          <button class="pill-btn" data-select="college" aria-pressed="false">I'm in college</button>
+        </div>
+
+        <form class="email-form" id="hero-form" novalidate>
+          <input type="email" id="hero-email" placeholder="you@email.com" required aria-label="Email address">
+          <button type="submit" class="submit-btn">Join waitlist</button>
+        </form>
+        <div class="success-msg" id="hero-success">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>You're on the list. We'll be in touch.</span>
+        </div>
+        <p class="form-note">Early access from ₹999/month. No spam, ever.</p>
+      </div>
+
+      <div class="card-stack" aria-hidden="true">
+        <div class="lvl-card card-1">
+          <span class="tag">College</span>
+          <span class="figure">₹999<span style="font-size:13px;font-weight:600;opacity:.85;">/mo</span></span>
+          <span class="brand">Lvl Up</span>
+        </div>
+        <div class="lvl-card card-2">
+          <span class="tag">Teens</span>
+          <span class="figure">Level 07</span>
+          <span class="brand">Lvl Up</span>
+        </div>
+        <div class="lvl-card card-3">
+          <span class="tag">Kids · 8–12</span>
+          <span class="figure">Mission ✓</span>
+          <span class="brand">Lvl Up</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRACK PICKER -->
+  <section class="section-pad wrap" id="tracks">
+    <div class="section-head reveal">
+      <span class="kicker">Three tracks, one app</span>
+      <h2>Built for the stage you're actually in.</h2>
+      <p>Not a scaled-down version of the same app three times. Each track has its own job to do.</p>
+    </div>
+
+    <div class="tracks-grid">
+      <details class="track-card reveal" id="kids-card">
+        <summary>
+          <span class="track-tag">Kids · 8–12</span>
+          <span class="track-title">Money they can't ignore</span>
+          <span class="track-job">For parents whose kids spend UPI money like it's invisible.</span>
+          <span class="track-toggle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+        </summary>
+        <div class="track-body">
+          <ul>
+            <li>One 10-minute "money mission" a week — not a chore, not a lecture</li>
+            <li>You get a 30-second report. No dashboard to babysit</li>
+            <li>Money runs out on purpose, in a safe place, before it happens for real</li>
+            <li>Full parent control, always — you approve everything that matters</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="track-card reveal d1" id="teens-card">
+        <summary>
+          <span class="track-tag">Teens</span>
+          <span class="track-title">More rope, not more lectures</span>
+          <span class="track-job">For teens who want independence without feeling babied.</span>
+          <span class="track-toggle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+        </summary>
+        <div class="track-body">
+          <ul>
+            <li>Saving goals with real deadlines, not just a piggy bank number</li>
+            <li>Spot-the-bad-deal challenges — the skill that actually saves money</li>
+            <li>Basic budgeting, using their own numbers</li>
+            <li>Parents stay visible, not in control</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="track-card reveal d2" id="college-card">
+        <summary>
+          <span class="track-tag">College</span>
+          <span class="track-title">Nobody taught you this</span>
+          <span class="track-job">For students who feel behind on money and don't want to admit it.</span>
+          <span class="track-toggle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+        </summary>
+        <div class="track-body">
+          <ul>
+            <li>Budgeting that works for irregular pocket money and part-time income</li>
+            <li>First salary and UPI habits that don't wreck your month</li>
+            <li>Debt traps — see them coming before you're in one</li>
+            <li>Small, real investing decisions. No training wheels</li>
+            <li>Fully private. No parent view, ever</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section-pad wrap" id="how">
+    <div class="section-head reveal">
+      <span class="kicker">How it works</span>
+      <h2>One loop. Every week.</h2>
+      <p>Same shape at every stage — the stakes just grow up with you.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-card reveal">
+        <div class="how-num">1</div>
+        <h3>Mission</h3>
+        <p>A short weekly challenge, sized to the stage — spotting a bad deal, hitting a saving goal, or making a real budgeting call.</p>
+      </div>
+      <div class="how-card reveal d1">
+        <div class="how-num">2</div>
+        <h3>Decision</h3>
+        <p>A real choice with real stakes, inside the app — not out of pocket. Mistakes cost something. Just not real money.</p>
+      </div>
+      <div class="how-card reveal d2">
+        <div class="how-num">3</div>
+        <h3>Report</h3>
+        <p>Parents get a 30-second summary for Kids & Teens. College users get the same report — just for themselves.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST STRIP -->
+  <section class="trust section-pad">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">Built to be trusted</span>
+        <h2>We thought about the risks so you don't have to.</h2>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-item reveal">
+          <div class="trust-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-4z" stroke="#1447e6" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          <h4>Data privacy, by default</h4>
+          <p>Encrypted end to end. Never sold, never shared with advertisers.</p>
+        </div>
+        <div class="trust-item reveal d1">
+          <div class="trust-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="#1447e6" stroke-width="1.8"/><path d="M5 20c1.5-3.6 4.2-5.4 7-5.4S17.5 16.4 19 20" stroke="#1447e6" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <h4>Real parent control</h4>
+          <p>For Kids & Teens: you approve what matters and see everything that counts. Nothing you don't need.</p>
+        </div>
+        <div class="trust-item reveal d2">
+          <div class="trust-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 6l1.6 13A2 2 0 007.6 21h8.8a2 2 0 002-1.8L20 6M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2" stroke="#1447e6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h4>Zero ads, ever</h4>
+          <p>We make money from subscriptions, not from your child's attention.</p>
+        </div>
+        <div class="trust-item reveal d3">
+          <div class="trust-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" stroke="#1447e6" stroke-width="1.8"/><path d="M3 10h18" stroke="#1447e6" stroke-width="1.8"/></svg></div>
+          <h4>Independence, gated by age</h4>
+          <p>College is fully private. Kids & Teens stay parent-visible. Always the right amount of rope.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="cta-final wrap" id="join">
+    <h2 class="reveal">Ready to level up?</h2>
+    <p class="reveal d1">Founding members get early access and pricing locked in at launch.</p>
+    <form class="email-form reveal d2" id="final-form" novalidate>
+      <input type="email" id="final-email" placeholder="you@email.com" required aria-label="Email address">
+      <button type="submit" class="submit-btn">Join waitlist</button>
+    </form>
+    <div class="success-msg" id="final-success">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>You're on the list. We'll be in touch.</span>
+    </div>
+    <p class="form-note">₹999/month · Kids, Teens & College · Cancel anytime.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <a href="#top" class="logo"><span class="logo-dot"></span>Lvl Up</a>
+        <p>Money skills that grow up with you.</p>
+      </div>
+      <div class="footer-social">
+        <a href="#">Instagram</a>
+        <a href="#">X</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Lvl Up. All rights reserved.</span>
+      <span>Made in India</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---- sticky nav solid on scroll ---- */
+  var nav = document.getElementById('nav');
+  function onScroll(){
+    if(window.scrollY > 40){ nav.classList.add('solid'); }
+    else { nav.classList.remove('solid'); }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* ---- scroll reveal ---- */
+  var revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.12, rootMargin:'0px 0px -40px 0px'});
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in-view'); });
+  }
+
+  /* ---- hero track pill selector ---- */
+  var copy = {
+    default: {
+      headline: "Money skills for every stage of growing up.",
+      sub: "Kids. Teens. College. One app that meets you where you are — and a parent report that takes 30 seconds, not another dashboard to babysit."
+    },
+    kids: {
+      headline: "Screen time teaches nothing about money. This does.",
+      sub: "One 10-minute mission a week for your 8–12 year old. You get a 30-second report — not another app to manage."
+    },
+    teens: {
+      headline: "More freedom. Fewer money mistakes.",
+      sub: "Saving goals, spotting bad deals, real budgeting — still visible to you, still 100% theirs to run."
+    },
+    college: {
+      headline: "Nobody taught you this. We will.",
+      sub: "Budgeting, your first salary, dodging debt traps, and real investing decisions — fully private, fully yours."
+    }
+  };
+
+  var headlineEl = document.getElementById('hero-headline');
+  var subEl = document.getElementById('hero-sub');
+  var pillBtns = document.querySelectorAll('.pill-btn[data-select]');
+  var activeTrack = null;
+
+  function setTrack(key){
+    var target = (activeTrack === key) ? 'default' : key;
+    activeTrack = (target === 'default') ? null : target;
+    var data = copy[target];
+    headlineEl.style.opacity = 0;
+    subEl.style.opacity = 0;
+    setTimeout(function(){
+      headlineEl.textContent = data.headline;
+      subEl.textContent = data.sub;
+      headlineEl.style.opacity = 1;
+      subEl.style.opacity = 1;
+    }, 140);
+    pillBtns.forEach(function(btn){
+      btn.setAttribute('aria-pressed', btn.getAttribute('data-select') === activeTrack ? 'true' : 'false');
+    });
+  }
+
+  pillBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      setTrack(btn.getAttribute('data-select'));
+    });
+  });
+
+  /* ---- nav track links: scroll + open the matching card ---- */
+  var navLinks = document.querySelectorAll('[data-track-link]');
+  navLinks.forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = link.getAttribute('href').replace('#','');
+      var card = document.getElementById(id);
+      if(!card) return;
+      card.setAttribute('open','');
+      var navHeight = 90;
+      var top = card.getBoundingClientRect().top + window.pageYOffset - navHeight;
+      window.scrollTo({top: top, behavior:'smooth'});
+    });
+  });
+
+  /* ---- email forms: client-side success state only ---- */
+  function wireForm(formId, emailId, successId){
+    var form = document.getElementById(formId);
+    var email = document.getElementById(emailId);
+    var success = document.getElementById(successId);
+    if(!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!email.value || !email.checkValidity()){
+        email.focus();
+        return;
+      }
+      var btn = form.querySelector('.submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Joining...';
+      setTimeout(function(){
+        form.style.display = 'none';
+        success.classList.add('show');
+      }, 500);
+    });
+  }
+  wireForm('hero-form','hero-email','hero-success');
+  wireForm('final-form','final-email','final-success');
+
+})();
+</script>
+
+</body>
+</html>
